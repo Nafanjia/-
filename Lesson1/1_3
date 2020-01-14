@@ -1,0 +1,44 @@
+import requests
+import time
+import json
+import re
+
+headers = {
+    'User-agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0',
+}
+
+api_url_category = 'https://5ka.ru/api/v2/categories/'
+api_url = 'https://5ka.ru/api/v2/special_offers/'
+url = 'https://5ka.ru/special_offers/'
+
+category = requests.get(api_url_category).json()
+
+params = {'records_per_page': 20, 'page': 1, 'categories': category[3]["parent_group_code"]}
+
+def get_data(url: str, params: dict) -> dict:
+    while True:
+        time.sleep(1)
+        response = requests.get(url, headers=headers, params=params)
+        if response.status_code == 200:
+            break
+    return response.json()
+
+results = []
+
+url = 'https://5ka.ru/api/v2/special_offers/'
+
+for i in range(len(category)):
+    params = {'records_per_page': 20, 'page': 1, 'categories': category[i]["parent_group_code"]}
+    while url:
+        response = get_data(url, params)
+        results.extend(response['results'])
+        url = response['next']
+        params = {}
+    cat = {'category_id': category[i]['parent_group_code'], 'category_name': category[i]['parent_group_name'], 'items': results}
+    file_name = re.sub("\n", ',', category[i]['parent_group_name']).replace('*,*', ',').replace('"', '')
+    with open(f'{file_name}.json', 'w', encoding='utf-8') as f:
+        f.write(json.dumps(cat, sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False))
+    results = []
+    cat = []
+    url = 'https://5ka.ru/api/v2/special_offers/'
+print(1)
