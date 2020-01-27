@@ -3,8 +3,9 @@ from scrapy.settings import Settings
 from avitoparse import settings
 # from gbparse import settings
 # from gbparse.spiders.geekbrains import GeekbrainsSpider
-# from avitoparse.spiders.avito import AvitoSpider
+from avitoparse.spiders.avito import AvitoSpider
 from avitoparse.spiders.hh import HhSpider
+from avitoparse.spiders.instagram import InstagramSpider
 
 if __name__ == '__main__':
     scr_settings = Settings()
@@ -12,5 +13,6 @@ if __name__ == '__main__':
     process = CrawlerProcess(settings=scr_settings)
     # process.crawl(GeekbrainsSpider)
     # process.crawl(AvitoSpider)
-    process.crawl(HhSpider)
+    # process.crawl(HhSpider)
+    process.crawl(InstagramSpider)
     process.start()
