@@ -64,5 +64,15 @@ if __name__ == '__main__':
         while res == None:
             pages_start, res = get_friends_all(pages_start)
             pages_finish, res = get_friends_all(pages_finish)
+    chain = []
+    for url in res:
+        chain.append(f'https://vk.com/id{url}')
+    ruki = {
+        'persona_a': f'https://vk.com/id{user_id_1}',
+        'persona_b': f'https://vk.com/id{user_id_2}',
+        'chain': chain
+    }
     print(res)
+    print(ruki)
+
 
